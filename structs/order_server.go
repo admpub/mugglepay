@@ -15,8 +15,8 @@ type ServerOrder struct {
 	Permission string   `json:"permission"`
 }
 
-// GetPaymentURL 获取支付地址
-func (s *ServerOrder) GetPaymentURL() {
+// ParseInvoiceAddress 解析扫码地址
+func (s *ServerOrder) ParseInvoiceAddress() {
 	switch s.Invoice.PayCurrency {
 	case "ALIPAY":
 		if rurl := utils.URLQueryValueGetter(s.Invoice.Qrcode)("url"); rurl != "" {
