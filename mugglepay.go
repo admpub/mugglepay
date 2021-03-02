@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/admpub/mugglepay/structs"
+	"github.com/admpub/mugglepay/utils"
 )
 
 const (
@@ -125,8 +126,7 @@ func (m *Mugglepay) Sent(orderID string) (structs.ServerOrder, error) {
 	if err != nil {
 		return sorder, err
 	}
-	if sorder.Invoice.PayCurrency == "ALIPAY" || sorder.Invoice.PayCurrency == "WECHAT" {
-		// 法币不可调用此 API
+	if !utils.IsCryptoCurrency(sorder.Invoice.PayCurrency) { // 法币不可调用此 API
 		return sorder, errors.New("tan 90°")
 	}
 	err = m.Post(fmt.Sprintf(sentURL, orderID), &sorder, emptyBody)

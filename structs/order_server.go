@@ -15,20 +15,29 @@ type ServerOrder struct {
 	Permission string   `json:"permission"`
 }
 
-// ParseInvoiceAddress 解析扫码地址
-func (s *ServerOrder) ParseInvoiceAddress() *ServerOrder {
-	switch s.Invoice.PayCurrency {
-	case "ALIPAY":
-		if rurl := utils.URLQueryValueGetter(s.Invoice.Qrcode)("url"); rurl != "" {
+// QRCodeURLParsers 二维码网址解析器
+var QRCodeURLParsers = map[string]func(*ServerOrder){
+	`ALIPAY`: func(s *ServerOrder) {
+		if rurl := utils.URLQueryValueGetter(s.Invoice.Qrcode)("url"); len(rurl) > 0 {
 			s.Invoice.Address = rurl
 		} else {
 			s.Invoice.Address = utils.URLQueryValueGetter(s.Invoice.QrcodeLg)("mpurl")
 		}
-	case "WECHAT":
+	},
+	`WECHAT`: func(s *ServerOrder) {
 		s.Invoice.Address = s.Invoice.Qrcode
-	case "EOS":
+	},
+	`EOS`: func(s *ServerOrder) {
 		s.Invoice.Address = "mgtestflight"
 		s.Invoice.Memo = fmt.Sprintf("MP:%s", s.Invoice.OrderID)
+	},
+}
+
+// ParseInvoiceAddress 解析扫码地址
+func (s *ServerOrder) ParseInvoiceAddress() *ServerOrder {
+	ps, ok := QRCodeURLParsers[s.Invoice.PayCurrency]
+	if ok {
+		ps(s)
 	}
 	return s
 }

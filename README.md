@@ -21,10 +21,6 @@ import (
 func CreateOrder(c *gin.Context) {
     mgp := mugglepay.New("BitpayxApplicationKey")
     // host := "https://www.example.com"
-    // 如需法币支付则必须设置正确的回调地址
-    // mgp.CallbackURL = host + "/payment/notify"
-    // mgp.CancelURL = host + "/user/code/return"
-    // mgp.SuccessURL = host + "/user/code/return"
     serverOrder, _ := mgp.CreateOrder(&structs.Order{
         MerchantOrderID: orderID,
         PriceAmount:     money,
@@ -35,6 +31,10 @@ func CreateOrder(c *gin.Context) {
         PriceCurrency:   "CNY",
         Title:           "订单标题",
         Description:     "订单描述",
+        // 如需法币支付则必须设置正确的回调地址
+        // CallbackURL: host + "/payment/notify",
+        // CancelURL: host + "/user/code/return",
+        // SuccessURL: host + "/user/code/return",
     })
     // 支付宝/微信扫码链接，该函数仅 PayCurrency 为 ALIPAY/WECHAT 时可返回地址
     // 其他情况下均返回加密货币地址
