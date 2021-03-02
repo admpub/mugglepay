@@ -28,5 +28,5 @@ var LegalCurrencies = []string{`ALIPAY`, `WECHAT`}
 
 // IsCryptoCurrency 是否是加密货币支付
 func IsCryptoCurrency(payCurrency string) bool {
-	return !com.InSlices(payCurrency, LegalCurrencies)
+	return !com.InSlice(payCurrency, LegalCurrencies)
 }
