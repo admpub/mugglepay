@@ -16,7 +16,7 @@ type ServerOrder struct {
 }
 
 // ParseInvoiceAddress 解析扫码地址
-func (s *ServerOrder) ParseInvoiceAddress() {
+func (s *ServerOrder) ParseInvoiceAddress() *ServerOrder {
 	switch s.Invoice.PayCurrency {
 	case "ALIPAY":
 		if rurl := utils.URLQueryValueGetter(s.Invoice.Qrcode)("url"); rurl != "" {
@@ -30,4 +30,5 @@ func (s *ServerOrder) ParseInvoiceAddress() {
 		s.Invoice.Address = "mgtestflight"
 		s.Invoice.Memo = fmt.Sprintf("MP:%s", s.Invoice.OrderID)
 	}
+	return s
 }
