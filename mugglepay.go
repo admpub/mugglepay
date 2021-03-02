@@ -15,8 +15,11 @@ const (
 	checkoutURL    = "/orders/%s/checkout"
 	statusURL      = "/orders/%s/status"
 	sentURL        = "/orders/%s/sent"
+	cancelOrderURL = "/orders/%s/cancel"
+	refundURL      = "/orders/%s/refund"
 )
 
+// New 新实例
 func New(key string) *Mugglepay {
 	m := &Mugglepay{
 		AppKey: key,
@@ -25,6 +28,7 @@ func New(key string) *Mugglepay {
 	return m
 }
 
+// Mugglepay mugglepay操作
 type Mugglepay struct {
 	AppKey      string
 	APIURL      string
@@ -98,6 +102,7 @@ func (m *Mugglepay) CheckOut(orderID, PayCurrency string) (structs.ServerOrder, 
 		return sorder, errors.New("order id cannot be null")
 	}
 	me := make(map[string]string)
+	me["order_id"] = orderID
 	me["pay_currency"] = PayCurrency
 	err := m.Post(fmt.Sprintf(checkoutURL, orderID), &sorder, me)
 	return sorder, err
@@ -130,5 +135,27 @@ func (m *Mugglepay) Sent(orderID string) (structs.ServerOrder, error) {
 		return sorder, errors.New("tan 90°")
 	}
 	err = m.Post(fmt.Sprintf(sentURL, orderID), &sorder, emptyBody)
+	return sorder, err
+}
+
+// Refund 退款
+func (m *Mugglepay) Refund(orderID string) (structs.ServerOrder, error) {
+	var sorder structs.ServerOrder
+	var err error
+	if orderID == "" {
+		return sorder, errors.New("order id cannot be null")
+	}
+	err = m.Post(fmt.Sprintf(refundURL, orderID), &sorder, emptyBody)
+	return sorder, err
+}
+
+// CancelOrder 取消订单
+func (m *Mugglepay) CancelOrder(orderID string) (structs.ServerOrder, error) {
+	var sorder structs.ServerOrder
+	var err error
+	if orderID == "" {
+		return sorder, errors.New("order id cannot be null")
+	}
+	err = m.Post(fmt.Sprintf(cancelOrderURL, orderID), &sorder, emptyBody)
 	return sorder, err
 }
