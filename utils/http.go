@@ -22,25 +22,34 @@ func Resty() *resty.Client {
 	return restyG
 }
 
-func Request(contentType string, key string) *resty.Request {
+func Request(key string, contentType ...string) *resty.Request {
 	r := Resty().R()
-	if contentType == `json` {
-		r.SetHeader("Content-Type", "application/json")
+	if len(contentType) > 0 {
+		switch contentType[0] {
+		case `json`:
+			r.SetHeader("Content-Type", "application/json")
+		}
 	}
 	r.SetHeader("Accept", "application/json")
 	r.SetHeader("token", key)
 	return r
 }
 
-func HTTPGet(fullURL string, result interface{}, key string) (*resty.Response, error) {
-	client := Request(``, key)
+type ReqURL string
+
+func (r ReqURL) Get(result interface{}, key string) (*resty.Response, error) {
+	client := Request(key)
 	client.SetResult(result)
-	return client.Get(fullURL)
+	return client.Get(r.String())
 }
 
-func HTTPPost(fullURL string, result interface{}, body interface{}, key string) (*resty.Response, error) {
-	client := Request(`json`, key)
+func (r ReqURL) String() string {
+	return string(r)
+}
+
+func (r ReqURL) Post(result interface{}, body interface{}, key string) (*resty.Response, error) {
+	client := Request(key, `json`)
 	client.SetBody(body)
 	client.SetResult(result)
-	return client.Post(fullURL)
+	return client.Post(r.String())
 }

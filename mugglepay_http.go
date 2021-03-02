@@ -2,14 +2,19 @@ package mugglepay
 
 import "github.com/admpub/mugglepay/utils"
 
-// HTTPPost HTTP POST
-func (m *Mugglepay) HTTPPost(apiURL string, result interface{}, body interface{}) error {
-	_, err := utils.HTTPPost(m.APIURL+apiURL, result, body, m.AppKey)
+// ReqURL HTTP Request URL
+func (m *Mugglepay) ReqURL(apiURL string) utils.ReqURL {
+	return utils.ReqURL(m.APIURL + apiURL)
+}
+
+// Post HTTP POST
+func (m *Mugglepay) Post(apiURL string, result interface{}, body interface{}) error {
+	_, err := m.ReqURL(apiURL).Post(result, body, m.AppKey)
 	return err
 }
 
-// HTTPGet HTTP GET
-func (m *Mugglepay) HTTPGet(apiURL string, result interface{}) error {
-	_, err := utils.HTTPGet(m.APIURL+apiURL, result, m.AppKey)
+// Get HTTP GET
+func (m *Mugglepay) Get(apiURL string, result interface{}) error {
+	_, err := m.ReqURL(apiURL).Get(result, m.AppKey)
 	return err
 }

@@ -57,7 +57,7 @@ func (m *Mugglepay) CreateOrder(order *structs.Order) (structs.ServerOrder, erro
 	// 签名
 	order.Sign(m.AppKey)
 
-	err := m.HTTPPost(createOrderURL, &sorder, order)
+	err := m.Post(createOrderURL, &sorder, order)
 	return sorder, err
 }
 
@@ -86,7 +86,7 @@ func (m *Mugglepay) GetOrder(orderID string) (structs.ServerOrder, error) {
 	if orderID == "" {
 		return sorder, errors.New("order id cannot be null")
 	}
-	err := m.HTTPGet(fmt.Sprintf(getOrderURL, orderID), &sorder)
+	err := m.Get(fmt.Sprintf(getOrderURL, orderID), &sorder)
 	return sorder, err
 }
 
@@ -98,7 +98,7 @@ func (m *Mugglepay) CheckOut(orderID, PayCurrency string) (structs.ServerOrder, 
 	}
 	me := make(map[string]string)
 	me["pay_currency"] = PayCurrency
-	err := m.HTTPPost(fmt.Sprintf(checkoutURL, orderID), &sorder, me)
+	err := m.Post(fmt.Sprintf(checkoutURL, orderID), &sorder, me)
 	return sorder, err
 }
 
@@ -108,9 +108,11 @@ func (m *Mugglepay) GetStatus(orderID string) (structs.ServerOrder, error) {
 	if orderID == "" {
 		return sorder, errors.New("order id cannot be null")
 	}
-	err := m.HTTPGet(fmt.Sprintf(statusURL, orderID), &sorder)
+	err := m.Get(fmt.Sprintf(statusURL, orderID), &sorder)
 	return sorder, err
 }
+
+var emptyBody = make(map[string]interface{})
 
 // Sent 虚拟币: 我已支付
 func (m *Mugglepay) Sent(orderID string) (structs.ServerOrder, error) {
@@ -127,7 +129,6 @@ func (m *Mugglepay) Sent(orderID string) (structs.ServerOrder, error) {
 		// 法币不可调用此 API
 		return sorder, errors.New("tan 90°")
 	}
-	body := make(map[string]interface{})
-	err = m.HTTPPost(fmt.Sprintf(sentURL, orderID), &sorder, body)
+	err = m.Post(fmt.Sprintf(sentURL, orderID), &sorder, emptyBody)
 	return sorder, err
 }
