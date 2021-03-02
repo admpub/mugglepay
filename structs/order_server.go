@@ -13,6 +13,11 @@ type ServerOrder struct {
 	PaymentURL string   `json:"payment_url"`
 	Invoice    Invoice  `json:"invoice"`
 	Permission string   `json:"permission"`
+
+	// Failed:
+	// MugglePay Server will always return status 400. If API failed, it will return error_code and error as its object.
+	Error     string `json:"error"`
+	ErrorCode string `json:"error_code"`
 }
 
 // QRCodeURLParsers 二维码网址解析器
