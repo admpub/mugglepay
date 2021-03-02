@@ -40,35 +40,36 @@ type Mugglepay struct {
 // CreateOrder 创建订单，返回 ServerOrder
 func (m *Mugglepay) CreateOrder(order *structs.Order) (structs.ServerOrder, error) {
 	var sorder structs.ServerOrder
-	if m.AppKey == "" {
+	if len(m.AppKey) == 0 {
 		return sorder, errors.New("application key cannot be null")
 	}
-	if order.MerchantOrderID == "" {
+	if len(order.MerchantOrderID) == 0 {
 		return sorder, errors.New("merchant order id cannot be null")
 	}
-
-	if order.PriceCurrency == "" {
+	if len(order.PriceCurrency) == 0 {
 		order.PriceCurrency = "CNY"
 	}
-	if m.CallbackURL == "" {
-		// 如果没有回调地址将无法使用法币支付，默认仅可用虚拟币
+	if len(order.CallbackURL) == 0 {
+		order.CallbackURL = m.CallbackURL
+	}
+	if len(order.CancelURL) == 0 {
+		order.CancelURL = m.CancelURL
+	}
+	if len(order.SuccessURL) == 0 {
+		order.SuccessURL = m.SuccessURL
+	}
+	if len(order.CallbackURL) == 0 { // 如果没有回调地址将无法使用法币支付，默认仅可用虚拟币
 		order.PayCurrency = ""
 	}
-
-	order.CallbackURL = m.CallbackURL
-	order.CancelURL = m.CancelURL
-	order.SuccessURL = m.SuccessURL
-
 	// 签名
 	order.Sign(m.AppKey)
-
 	err := m.Post(createOrderURL, &sorder, order)
 	return sorder, err
 }
 
 // VerifyOrder 校验订单 true: 已支付; false: 未支付/取消/欺诈
 func (m *Mugglepay) VerifyOrder(callback *structs.Callback) bool {
-	if m.AppKey == "" {
+	if len(m.AppKey) == 0 {
 		return false
 	}
 	order := &structs.Order{
@@ -88,7 +89,7 @@ func (m *Mugglepay) VerifyOrder(callback *structs.Callback) bool {
 // GetOrder 根据网关订单编号获取 ServerOrder
 func (m *Mugglepay) GetOrder(orderID string) (structs.ServerOrder, error) {
 	var sorder structs.ServerOrder
-	if orderID == "" {
+	if len(orderID) == 0 {
 		return sorder, errors.New("order id cannot be null")
 	}
 	err := m.Get(fmt.Sprintf(getOrderURL, orderID), &sorder)
@@ -98,7 +99,7 @@ func (m *Mugglepay) GetOrder(orderID string) (structs.ServerOrder, error) {
 // CheckOut 切换网关支付方式
 func (m *Mugglepay) CheckOut(orderID, PayCurrency string) (structs.ServerOrder, error) {
 	var sorder structs.ServerOrder
-	if orderID == "" {
+	if len(orderID) == 0 {
 		return sorder, errors.New("order id cannot be null")
 	}
 	me := make(map[string]string)
@@ -111,7 +112,7 @@ func (m *Mugglepay) CheckOut(orderID, PayCurrency string) (structs.ServerOrder, 
 // GetStatus 订单查询
 func (m *Mugglepay) GetStatus(orderID string) (structs.ServerOrder, error) {
 	var sorder structs.ServerOrder
-	if orderID == "" {
+	if len(orderID) == 0 {
 		return sorder, errors.New("order id cannot be null")
 	}
 	err := m.Get(fmt.Sprintf(statusURL, orderID), &sorder)
@@ -124,7 +125,7 @@ var emptyBody = make(map[string]interface{})
 func (m *Mugglepay) Sent(orderID string) (structs.ServerOrder, error) {
 	var sorder structs.ServerOrder
 	var err error
-	if orderID == "" {
+	if len(orderID) == 0 {
 		return sorder, errors.New("order id cannot be null")
 	}
 	sorder, err = m.GetOrder(orderID)
@@ -142,7 +143,7 @@ func (m *Mugglepay) Sent(orderID string) (structs.ServerOrder, error) {
 func (m *Mugglepay) Refund(orderID string) (structs.ServerOrder, error) {
 	var sorder structs.ServerOrder
 	var err error
-	if orderID == "" {
+	if len(orderID) == 0 {
 		return sorder, errors.New("order id cannot be null")
 	}
 	err = m.Post(fmt.Sprintf(refundURL, orderID), &sorder, emptyBody)
@@ -153,7 +154,7 @@ func (m *Mugglepay) Refund(orderID string) (structs.ServerOrder, error) {
 func (m *Mugglepay) CancelOrder(orderID string) (structs.ServerOrder, error) {
 	var sorder structs.ServerOrder
 	var err error
-	if orderID == "" {
+	if len(orderID) == 0 {
 		return sorder, errors.New("order id cannot be null")
 	}
 	err = m.Post(fmt.Sprintf(cancelOrderURL, orderID), &sorder, emptyBody)
