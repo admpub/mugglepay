@@ -18,17 +18,17 @@ type ServerOrder struct {
 	ErrorCode string `json:"error_code"`
 }
 
-// QRCodeURLParsers 二维码网址解析器
-var QRCodeURLParsers = map[string]func(*ServerOrder){
+// ServerOrderParsers 响应订单数据解析器
+var ServerOrderParsers = map[string]func(*ServerOrder){
 	`EOS`: func(s *ServerOrder) {
 		s.Invoice.Address = "mgtestflight"
 		s.Invoice.Memo = fmt.Sprintf("MP:%s", s.Invoice.OrderID)
 	},
 }
 
-// ParseInvoiceAddress 解析扫码地址
-func (s *ServerOrder) ParseInvoiceAddress() *ServerOrder {
-	ps, ok := QRCodeURLParsers[s.Invoice.PayCurrency]
+// Parse 解析响应订单数据
+func (s *ServerOrder) Parse() *ServerOrder {
+	ps, ok := ServerOrderParsers[s.Invoice.PayCurrency]
 	if ok {
 		ps(s)
 	}
