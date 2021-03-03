@@ -8,10 +8,10 @@ import (
 )
 
 type Order struct {
-	MerchantOrderID string  `json:"merchant_order_id"`
-	PriceAmount     float64 `json:"price_amount"`
-	PriceCurrency   string  `json:"price_currency"`
-	PayCurrency     string  `json:"pay_currency"`
+	MerchantOrderID string  `json:"merchant_order_id"` // required. 自己系统的订单号
+	PriceAmount     float64 `json:"price_amount"`      // required. 金额
+	PriceCurrency   string  `json:"price_currency"`    // required. 金额币种
+	PayCurrency     string  `json:"pay_currency"`      // 支付方式，自己实现选择支付方式的时候提供。e.g. ALIPAY, ALIGLOBAL, WECHAT, BTC, LTC, ETH, EOS, BCH, LBTC (for Lightening BTC), CUSD (for Celo Dollars)
 	Title           string  `json:"title"`
 	Description     string  `json:"description"`
 	CallbackURL     string  `json:"callback_url"`
