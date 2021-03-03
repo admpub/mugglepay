@@ -67,7 +67,7 @@ func (m *Mugglepay) CreateOrder(order *structs.Order) (structs.ServerOrder, erro
 	return sorder, err
 }
 
-// VerifyOrder 校验订单 true: 已支付; false: 未支付/取消/欺诈
+// VerifyOrder 校验订单签名
 func (m *Mugglepay) VerifyOrder(callback *structs.Callback) bool {
 	if len(m.AppKey) == 0 {
 		return false
