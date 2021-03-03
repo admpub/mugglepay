@@ -137,14 +137,14 @@ func (m *Mugglepay) Sent(orderID string) (structs.ServerOrder, error) {
 }
 
 // Refund 退款
-func (m *Mugglepay) Refund(orderID string) (structs.ServerOrder, error) {
-	var sorder structs.ServerOrder
+func (m *Mugglepay) Refund(orderID string) (structs.ServerRefund, error) {
+	var srefund structs.ServerRefund
 	var err error
 	if len(orderID) == 0 {
-		return sorder, errors.New("order id cannot be null")
+		return srefund, errors.New("order id cannot be null")
 	}
-	err = m.Post(fmt.Sprintf(refundURL, orderID), &sorder, emptyBody)
-	return sorder, err
+	err = m.Post(fmt.Sprintf(refundURL, orderID), &srefund, emptyBody)
+	return srefund, err
 }
 
 // CancelOrder 取消订单
