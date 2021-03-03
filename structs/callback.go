@@ -1,5 +1,6 @@
 package structs
 
+// Callback 回调数据
 type Callback struct {
 	MerchantOrderID string  `json:"merchant_order_id"`
 	OrderID         string  `json:"order_id"`

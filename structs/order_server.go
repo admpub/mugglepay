@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// ResponseOrder 接口返回订单信息
 type ResponseOrder struct {
 	OrderID         string  `json:"order_id"`          // muggalepay 订单ID
 	UserID          int64   `json:"user_id"`           // muggalepay 付款用户ID
@@ -29,6 +30,7 @@ type ResponseOrder struct {
 	ReceiveCurrency string  `json:"receive_currency"`
 }
 
+// ServerOrder 接口返回数据
 type ServerOrder struct {
 	Status     int           `json:"status"`
 	Order      ResponseOrder `json:"order"`

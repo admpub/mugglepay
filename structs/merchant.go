@@ -1,5 +1,6 @@
 package structs
 
+// Merchant 商家信息
 type Merchant struct {
 	AcceptBTC         bool                   `json:"accept_btc"`
 	AcceptUSDT        bool                   `json:"accept_usdt"`

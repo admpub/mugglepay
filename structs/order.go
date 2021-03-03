@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// Order 提交订单数据
 type Order struct {
 	MerchantOrderID string  `json:"merchant_order_id"` // required. 自己系统的订单号
 	PriceAmount     float64 `json:"price_amount"`      // required. 金额
