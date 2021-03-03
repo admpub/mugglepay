@@ -76,14 +76,11 @@ func (m *Mugglepay) VerifyOrder(callback *structs.Callback) bool {
 		MerchantOrderID: callback.MerchantOrderID,
 	}
 	order.Sign(m.AppKey)
+	// if callback.Status == "PAID" {
+	// 	return true
+	// }
 	// 校验签名
-	if order.Token != callback.Token {
-		return false
-	}
-	if callback.Status == "PAID" {
-		return true
-	}
-	return false
+	return order.Token == callback.Token
 }
 
 // GetOrder 根据网关订单编号获取 ServerOrder
