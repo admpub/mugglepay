@@ -1,5 +1,6 @@
 package structs
 
+// ResponseRefundOrder 退款时接口返回的订单信息
 type ResponseRefundOrder struct {
 	OrderID         string  `json:"order_id"`          // muggalepay 订单ID
 	UserID          int64   `json:"user_id"`           // muggalepay 付款用户ID
@@ -20,6 +21,7 @@ type ResponseRefundOrder struct {
 	UpdatedAt       string  `json:"updated_at"`
 }
 
+// ServerRefund 退款时返回信息
 type ServerRefund struct {
 	Status int                 `json:"status"`
 	Order  ResponseRefundOrder `json:"order"`
